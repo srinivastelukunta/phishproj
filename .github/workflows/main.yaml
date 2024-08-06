@@ -11,9 +11,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Check-out your repository.
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Print ENV Variables for Debugging
+        run: |
+          echo "HEROKU_EMAIL=${{ secrets.HEROKU_EMAIL }}"
+          echo "HEROKU_APP_NAME=${{ secrets.HEROKU_APP_NAME }}"
+
+      - name: Log in to Heroku Docker Registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build, Push and Release a Docker container to Heroku
+        uses: gonuit/heroku-docker-deploy@v1.3.3
+        with:
+          email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+          dockerfile_directory: ./
+          dockerfile_name: Dockerfile
+          docker_options: "--no-cache"
+          process_type: web
+
+
 
 
 ### ⬇ IMPORTANT PART ⬇ ###
