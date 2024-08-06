@@ -92,4 +92,3 @@ def test_model_persistence(trained_model):
     scaled_result = loaded_scaler.transform(user_age_salary)
     res = loaded_classifier.predict(scaled_result)
     assert res in [0, 1]
-    
