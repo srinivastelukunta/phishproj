@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import pickle
 
+
 @pytest.fixture
 def model_data():
     # Loading the dataset
@@ -14,7 +15,8 @@ def model_data():
 
     # Splitting the dataset into the Training set and Test set
     from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.25, random_state=0)
 
     # Feature Scaling
     sc = StandardScaler()
@@ -23,15 +25,18 @@ def model_data():
 
     return X_train, X_test, y_train, y_test, sc
 
+
 @pytest.fixture
 def trained_model(model_data):
     X_train, X_test, y_train, y_test, sc = model_data
 
     # Fitting Random Forest Classification to the Training set
-    classifier = RandomForestClassifier(n_estimators=10, criterion='entropy', random_state=0)
+    classifier = RandomForestClassifier(
+        n_estimators=10, criterion='entropy', random_state=0)
     classifier.fit(X_train, y_train)
 
     return classifier, sc, X_test, y_test
+
 
 def test_model_accuracy(trained_model):
     classifier, sc, X_test, y_test = trained_model
@@ -43,6 +48,7 @@ def test_model_accuracy(trained_model):
     accuracy = accuracy_score(y_test, y_pred)
     assert accuracy > 0.8  # Replace with your expected accuracy threshold
 
+
 def test_confusion_matrix(trained_model):
     classifier, sc, X_test, y_test = trained_model
 
@@ -53,6 +59,7 @@ def test_confusion_matrix(trained_model):
     cm = confusion_matrix(y_test, y_pred)
     assert cm.sum() == len(y_test)
 
+
 def test_single_prediction(trained_model):
     classifier, sc, _, _ = trained_model
 
@@ -61,6 +68,7 @@ def test_single_prediction(trained_model):
     scaled_result = sc.transform(user_age_salary)
     res = classifier.predict(scaled_result)
     assert res in [0, 1]
+
 
 def test_model_persistence(trained_model):
     classifier, sc, _, _ = trained_model

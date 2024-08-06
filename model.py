@@ -16,7 +16,8 @@ X = dataset.iloc[:, [2, 3]].values
 y = dataset.iloc[:, 4].values
 
 # Splitting the dataset into the Training set and Test set
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.25, random_state=0)
 
 # Feature Scaling
 sc = StandardScaler()
@@ -24,13 +25,14 @@ X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
 # Fitting Random Forest Classification to the Training set
-classifier = RandomForestClassifier(n_estimators=10, criterion='entropy', random_state=0)
+classifier = RandomForestClassifier(
+    n_estimators=10, criterion='entropy', random_state=0)
 classifier.fit(X_train, y_train)
 
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
 
-# Accuracy 
+# Accuracy
 print('Accuracy Score:', metrics.accuracy_score(y_test, y_pred))
 
 # Confusion Matrix
@@ -49,6 +51,3 @@ else:
 # Save model and Scaler
 pickle.dump(classifier, open('model.pkl', 'wb'))
 dump(sc, open('scaler.pkl', 'wb'))
-
-
-
