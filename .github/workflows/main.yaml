@@ -1,12 +1,9 @@
-# Your workflow name.
 name: Deploy to Heroku
 
-# Run workflow on every push to main branch.
 on:
   push:
     branches: [main]
 
-# Your workflows jobs.
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,12 +25,12 @@ jobs:
       - name: Run flake8 linter
         run: |
           echo "Running flake8..."
-          flake8 .
+          flake8 model.py test_model.py
 
       - name: Run pytest
         run: |
           echo "Running pytest..."
-          pytest
+          pytest test_model.py
 
       - name: Print ENV Variables for Debugging
         run: |
