@@ -13,7 +13,6 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-
     user_age_salary = [int(x) for x in request.form.values()]
     user_age_salary1=[user_age_salary]
     scaled_result = scaler.transform(user_age_salary1)
@@ -26,7 +25,6 @@ def predict():
 
 @app.route('/predict_api',methods=['POST'])
 def predict_api():
-
     data = request.get_json()
     age=data['age']
     salary=data['salary']
