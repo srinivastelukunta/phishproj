@@ -2,40 +2,37 @@ name: Deploy to Heroku
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x' # Specify your Python version here
+          python-version: '3.7' # Specify your Python version here
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirement.txt
+          pip install flake8 pytest
+          pip install -r requirements.txt
 
       - name: Run flake8 linter
         run: |
           echo "Running flake8..."
-          flake8 model.py test_model.py
+          flake8 .
 
       - name: Run pytest
         run: |
           echo "Running pytest..."
-          pytest test_model.py
-
-      - name: Print ENV Variables for Debugging
-        run: |
-          echo "HEROKU_EMAIL=${{ secrets.HEROKU_EMAIL }}"
-          echo "HEROKU_APP_NAME=${{ secrets.HEROKU_APP_NAME }}"
+          pytest
 
       - name: Log in to Heroku Docker Registry
         env:
@@ -43,7 +40,6 @@ jobs:
         run: |
           echo "Logging into Heroku Docker Registry..."
           echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-          heroku container:login
 
       - name: Build Docker container
         run: |
@@ -54,8 +50,6 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          echo "Logging into Heroku Docker Registry before push..."
-          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
           echo "Pushing Docker container..."
           docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
@@ -65,37 +59,3 @@ jobs:
         run: |
           echo "Releasing Heroku app..."
           heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
-
-### ⬇ IMPORTANT PART ⬇ ###
-
-      - name: Build, Push and Release a Docker container to Heroku. # Your custom step name
-        uses: gonuit/heroku-docker-deploy@v1.3.3 # GitHub action name (leave it as it is).
-        with:
-          # Below you must provide variables for your Heroku app.
-
-          # The email address associated with your Heroku account.
-          email: ${{ secrets.HEROKU_EMAIL }}
-          
-          # Heroku API key associated with provided user's email.
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          
-          # Name of the heroku application to which the build is to be sent.
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-
-          # (Optional, default: "./")
-          # Dockerfile directory.
-          dockerfile_directory: ./
-
-          # (Optional, default: "Dockerfile")
-          # Dockerfile name.
-          dockerfile_name: Dockerfile
-
-          # (Optional, default: "")
-          # Additional options of docker build command.
-          docker_options: "--no-cache"
-
-          # (Optional, default: "web")
-          # Select the process type for which you want the docker container to be uploaded.
-          process_type: web
-          
-### ⬆ IMPORTANT PART ⬆ ###
