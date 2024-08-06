@@ -1,5 +1,4 @@
 # Random Forest Classification
-# Change and push this to master
 # Importing the libraries
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
