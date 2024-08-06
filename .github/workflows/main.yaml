@@ -33,10 +33,23 @@ jobs:
           echo "Running pytest..."
           pytest
 
+      - name: Set up Heroku
+        run: |
+          echo "Setting up Heroku CLI..."
+          curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Log in to Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          echo "Logging in to Heroku..."
+          echo $HEROKU_API_KEY | heroku auth:token | docker login --username=_ --password-stdin registry.heroku.com
+
       - name: Deploy to Heroku using Git
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           echo "Deploying to Heroku using Git..."
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          heroku auth:token
           git push heroku main
