@@ -26,7 +26,6 @@ jobs:
         run: |
           echo "Logging into Heroku Docker Registry..."
           echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
-          docker login --username=_ --password $HEROKU_API_KEY registry.heroku.com
 
       - name: Build Docker container
         run: |
