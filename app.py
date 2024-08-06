@@ -1,17 +1,16 @@
-import numpy as np
 from flask import Flask, request, jsonify, render_template
 import pickle
-import json
-from sklearn.preprocessing import StandardScaler
 import os
 
 app = Flask(__name__)
 model = pickle.load(open('model.pkl', 'rb'))
 scaler = pickle.load(open('scaler.pkl', 'rb'))
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -23,6 +22,7 @@ def predict():
         return render_template('index.html', prediction_text='Yes, Purchaser')
     else:
         return render_template('index.html', prediction_text='No, Not a Purchaser')
+
 
 @app.route('/predict_api', methods=['POST'])
 def predict_api():
@@ -36,6 +36,7 @@ def predict_api():
         return jsonify({'Sales Prediction': 'Yes, Purchaser'})
     else:
         return jsonify({'Sales Prediction': 'No, Not a Purchaser'})
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
