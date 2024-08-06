@@ -45,6 +45,7 @@ else:
     print("Not a purchaser")
 
 #save model and Scaler
+
 import pickle
 from pickle import dump
 pickle.dump(classifier, open('model.pkl','wb'))
