@@ -19,9 +19,11 @@ def predict():
     scaled_result = scaler.transform(user_age_salary1)
     prediction = model.predict(scaled_result)
     if prediction == 1:
-        return render_template('index.html', prediction_text='Yes, Purchaser')
+        return render_template('index.html', 
+                               prediction_text='Yes, Purchaser')
     else:
-        return render_template('index.html', prediction_text='No, Not a Purchaser')
+        return render_template('index.html', 
+                               prediction_text='No, Not a Purchaser')
 
 
 @app.route('/predict_api', methods=['POST'])
