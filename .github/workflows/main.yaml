@@ -1,4 +1,4 @@
-name: Deploy to Heroku
+name: Deploy to Koyeb
 
 on:
   push:
@@ -33,52 +33,32 @@ jobs:
           echo "Running pytest..."
           pytest
 
-      - name: Log in to Heroku Docker Registry
+      - name: Log in to Docker Hub
         env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          echo "Logging into Heroku Docker Registry..."
-          echo $HEROKU_API_KEY | docker login --username=_ --password-stdin registry.heroku.com
+          echo "Logging into Docker Hub..."
+          echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
 
       - name: Build Docker container
         run: |
           echo "Building Docker container..."
-          docker build -t registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/houseproj:latest .
 
-      - name: Push Docker container to Heroku
+      - name: Push Docker container to Docker Hub
+        run: |
+          echo "Pushing Docker container to Docker Hub..."
+          docker push ${{ secrets.DOCKER_USERNAME }}/houseproj:latest
+
+      - name: Install Koyeb CLI
+        run: |
+          echo "Installing Koyeb CLI..."
+          curl -sSL https://cli.koyeb.com/install.sh | bash
+
+      - name: Deploy to Koyeb
         env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          KOYEBHPKEY: ${{ secrets.KOYEBHPKEY }}
         run: |
-          echo "Pushing Docker container..."
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-
-      - name: Release Heroku app
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          echo "Releasing Heroku app..."
-          heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
-
-      - name: Set up Heroku CLI
-        run: |
-          echo "Setting up Heroku CLI..."
-          curl https://cli-assets.heroku.com/install.sh | sh
-
-      - name: Authenticate with Heroku
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          echo "Authenticating with Heroku..."
-          echo $HEROKU_API_KEY | heroku auth:token | docker login --username=_ --password-stdin registry.heroku.com
-
-      - name: Add Heroku remote
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: |
-          echo "Adding Heroku remote..."
-          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
-
-      - name: Deploy to Heroku using Git
-        run: |
-          echo "Deploying to Heroku using Git..."
-          git push heroku main
+          echo "Deploying to Koyeb..."
+          koyeb service update houseproj --image ${{ secrets.DOCKER_USERNAME }}/houseproj:latest --api-key $KOYEBHPKEY
