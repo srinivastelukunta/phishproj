@@ -64,4 +64,4 @@ jobs:
           KOYEBHPKEY: ${{ secrets.KOYEBHPKEY }}
         run: |
           echo "Deploying to Koyeb..."
-          koyeb service update houseproj --image ${{ secrets.DOCKER_USERNAME }}/houseproj:latest --api-key $KOYEBHPKEY
+          koyeb services update houseproj --docker ${{ secrets.DOCKER_USERNAME }}/houseproj:latest --token $KOYEBHPKEY
