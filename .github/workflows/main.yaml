@@ -58,10 +58,3 @@ jobs:
           tar -xzf koyeb-cli_4.3.0_linux_amd64.tar.gz
           sudo mv koyeb /usr/local/bin/koyeb
           echo 'export PATH=$PATH:/usr/local/bin/koyeb' >> $GITHUB_ENV
-
-      - name: Deploy to Koyeb
-        env:
-          KOYEBHPKEY: ${{ secrets.KOYEBHPKEY }}
-        run: |
-          echo "Deploying to Koyeb..."
-          koyeb services update houseproj --docker ${{ secrets.DOCKER_USERNAME }}/houseproj:latest --token $KOYEBHPKEY
