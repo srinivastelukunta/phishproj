@@ -1,7 +1,7 @@
-# Machine-Learning-Model-Deployment-in-Heroku-using-Docker-GitHub-Actions
+# Machine-Learning-Model-Deployment-using Github actions
 
-#Requirements
-1. Heroku Account
+# Requirements
+1. MLOPS Team 71 DockerHub
 2. GitHub Account
 3. GitCLI
 

@@ -1,9 +1,4 @@
-Flask
-scikit-learn
-flake8
-pytest
 pandas
 numpy
-matplotlib
-seaborn
-gunicorn
+flask
+scikit-learn
