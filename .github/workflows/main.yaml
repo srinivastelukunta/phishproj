@@ -1,4 +1,4 @@
-name: Build and Push Docker Image to Docker hub
+name: Build and Push Docker Image to Docker Hub
 
 on:
   push:
@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
