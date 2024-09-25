@@ -28,7 +28,7 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
-          echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+          echo ${{ env.DOCKER_PASSWORD}} | docker login --username ${{ env.DOCKER_USERNAME}}  --password-stdin
 
       - name: Build Docker container
         run: |
