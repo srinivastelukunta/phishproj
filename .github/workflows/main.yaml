@@ -1,4 +1,4 @@
-name: Build and Push Docker Image to Docker Hub online
+name: Build and Push Docker Image to Docker Hub online updated
 
 on:
   push:
