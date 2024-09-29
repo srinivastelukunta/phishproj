@@ -1,4 +1,4 @@
-name: Build and Push Docker Image with pkl file
+name: Build and Push Docker Image with pkl file for demo purpose
 
 on:
   push:
